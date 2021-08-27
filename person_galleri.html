@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+        background-size: cover;
+      }
+
+      .personer {
+        border: 2px solid orange;
+        border-radius: 1rem;
+        transition: 0.5ms ease-in;
+      }
+      .personer:hover {
+        box-shadow: 2px 3px 6px grey;
+      }
+
+      main {
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1rem;
+        padding: 2rem;
+
+        border-radius: 1rem;
+
+        box-shadow: inset 0 0 10px;
+      }
+
+      .personer {
+        padding: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <section class="container"></section>
+    </main>
+    <template>
+      <article class="personer">
+        <h2></h2>
+        <img src="" alt="" />
+        <p class="birth"></p>
+        <p class="email"></p>
+      </article>
+    </template>
+
+    <script>
+      const personTemplate = document.querySelector("template");
+      const container = document.querySelector(".container");
+      const options = { headers: { "x-apikey": "600fe9211346a1524ff12e31" } };
+
+      window.addEventListener("DOMContentLoaded", start);
+      function start() {
+        const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri ";
+        hentData(url);
+      }
+
+      async function hentData(url) {
+        //Promise - data lover program at komme med date, imen det køre videre
+        const result = await fetch(url, options);
+        const json = await result.json();
+        console.log(json);
+        vis(json);
+      }
+
+      function vis(personer) {
+        personer.forEach((person) => {
+          let klon = personTemplate.cloneNode(true).content;
+          //Placer i HTML
+
+          klon.querySelector("h2").textContent =
+            person.fornavn + " " + person.efternavn;
+          klon.querySelector(".email").textContent = person.email;
+          klon.querySelector(".birth").textContent = person.fødselsdag;
+
+          klon.querySelector("img").src = "faces/" + person.billede;
+          container.appendChild(klon);
+        });
+      }
+    </script>
+  </body>
+</html>
